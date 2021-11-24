@@ -10,7 +10,7 @@ else
   PATH=$JWT_USER
 fi
 
-while getopts s:l: OPT
+while getopts s:l:p: OPT
 do
   case $OPT in
     "s" ) HOST="$OPTARG" ;;
@@ -32,7 +32,7 @@ echo
 
 URL=http://$HOST:$PORT/jwt
 
-COMMAND="$CURL -X POST -d user=$ACCOUNT -d pass=$PASS $URL"
+COMMAND="$CURL -m 10 -X POST -d user=$ACCOUNT -d pass=$PASS $URL"
 
 JWT=`$COMMAND 2>/dev/null`
 
