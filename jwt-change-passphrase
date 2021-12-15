@@ -1,0 +1,37 @@
+#!/bin/bash
+
+CURL=/bin/curl
+PORT=80
+
+while getopts s:l:p: OPT
+do
+  case $OPT in
+    "s" ) HOST="$OPTARG" ;;
+    "l" ) ACCOUNT="$OPTARG" ;;
+    "p" ) PORT="$OPTARG" ;;
+      * ) echo "Usage: $CMDNAME [-s HOST] [-l USER]" 1>&2
+          exit 1 ;;
+  esac
+done
+
+if [ -z "$HOST" -o -z "$ACCOUNT" ]; then
+ echo "Usage: $CMDNAME [-s HOST] [-l USER]" 1>&2
+ exit 1
+fi
+
+read -sp "Passphrase: " PASS
+
+echo
+
+URL=http://$HOST:$PORT/chpass
+
+COMMAND="$CURL -m 10 -X POST -d user=$ACCOUNT -d pass=$PASS $URL"
+
+PASSPHRASE=`$COMMAND 2>/dev/null`
+
+if [ -z "$PASSPHRASE" ]; then
+#error
+  echo "Failed"
+else
+  echo $PASSPHRASE
+fi
