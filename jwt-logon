@@ -5,9 +5,9 @@ PORT=80
 
 if [ -z $JWT_USER ]; then
   USER_ID=`id -u`
-  PATH=/tmp/jwt_user_u$USER_ID
+  DOWNLOAD_PATH=/tmp/jwt_user_u$USER_ID
 else
-  PATH=$JWT_USER
+  DOWNLOAD_PATH=$JWT_USER
 fi
 
 while getopts s:l:p: OPT
@@ -41,5 +41,5 @@ if [ -z "$JWT" ]; then
   echo "Failed"
 else
   echo "Success"
-  echo $JWT > $PATH
+  echo $JWT > $DOWNLOAD_PATH
 fi
