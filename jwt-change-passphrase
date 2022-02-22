@@ -32,6 +32,8 @@ PASSPHRASE=`$COMMAND 2>/dev/null`
 if [ -z "$PASSPHRASE" ] || [[ "$PASSPHRASE" =~ "Error" ]]; then
 #error
   echo "Failed"
+  exit 1
 else
   echo $PASSPHRASE
+  exit 0
 fi

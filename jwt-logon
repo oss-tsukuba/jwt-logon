@@ -39,7 +39,9 @@ JWT=`$COMMAND 2>/dev/null`
 if [ -z "$JWT" ] || [[ "$JWT" =~ "Error" ]]; then
 #error
   echo "Failed"
+  exit 1
 else
   echo "Success"
   echo $JWT > $DOWNLOAD_PATH
+  exit 0
 fi
