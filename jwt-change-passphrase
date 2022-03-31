@@ -1,7 +1,7 @@
 #!/bin/bash
 
 CURL=/bin/curl
-PORT=80
+PORT=443
 
 while getopts s:l:p: OPT
 do
@@ -23,7 +23,7 @@ read -sp "Passphrase: " PASS
 
 echo
 
-URL=http://$HOST:$PORT/chpass
+URL=https://$HOST:$PORT/jwt-server/chpass
 
 COMMAND="$CURL -m 10 -X POST -d user=$ACCOUNT -d pass=$PASS $URL"
 
