@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/bin/sh
 
-CURL=/bin/curl
+CURL=curl
 PORT=443
 
 while getopts s:l:p: OPT
@@ -19,7 +19,11 @@ if [ -z "$HOST" -o -z "$ACCOUNT" ]; then
  exit 1
 fi
 
-read -sp "Passphrase: " PASS
+echo -n "Passphrase: "
+trap "stty echo" HUP INT QUIT TERM
+stty -echo
+read PASS
+stty echo
 
 echo
 
@@ -28,8 +32,13 @@ URL=https://$HOST:$PORT/jwt-server/chpass
 COMMAND="$CURL -m 10 -X POST -d user=$ACCOUNT -d pass=$PASS $URL"
 
 PASSPHRASE=`$COMMAND 2>/dev/null`
+curl_ret=$?
+#curl's exit status is 0 at authentication error
 
-if [ -z "$PASSPHRASE" ] || [[ "$PASSPHRASE" =~ "Error" ]]; then
+expr "$JWT" : '.*Error.*' > /dev/null
+jwt_ret=$?
+
+if  [ $curl_ret -ne 0 ] || [ -z "$PASSPHRASE" ] || [ $jwt_ret -eq 0 ]; then
 #error
   echo "Failed"
   exit 1
