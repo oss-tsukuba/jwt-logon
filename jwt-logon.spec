@@ -4,7 +4,7 @@ Release: 1%{?dist}
 Summary: Assitant Program for jwt-server
 License: BSD
 Source0: %{name}-%{version}.tar.gz
-BuildRequires: golang
+Requires: curl
 
 Provides: %{name} = %{version}
 
