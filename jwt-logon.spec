@@ -21,9 +21,7 @@ Assist for JWT-SERVER
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -Dpm 0755 jwt-logon %{buildroot}%{_bindir}/jwt-logon
-install -Dpm 0755 jwt-change-passphrase %{buildroot}%{_bindir}/jwt-change-passphrase
-
+make DESTDIR=${RPM_BUILD_ROOT} BINDIR=%{_bindir} install
 
 %clean
 rm -rf $RPM_BUILD_ROOT

@@ -2,5 +2,6 @@ PREFIX=/usr
 BINDIR=$(PREFIX)/bin
 
 install:
-	install -m 0755 jwt-logon $(BINDIR)/jwt-logon
-	install -m 0755 jwt-change-passphrase $(BINDIR)/jwt-logon
+	mkdir -p $(DESTDIR)$(BINDIR)
+	install -m 0755 jwt-logon $(DESTDIR)$(BINDIR)/jwt-logon
+	install -m 0755 jwt-change-passphrase $(DESTDIR)$(BINDIR)/jwt-change-passphrase
