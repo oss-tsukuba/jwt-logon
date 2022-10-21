@@ -19,13 +19,17 @@ if [ -z "$HOST" -o -z "$ACCOUNT" ]; then
  exit 1
 fi
 
-echo -n "Passphrase: "
-trap "stty echo" HUP INT QUIT TERM
-stty -echo
-read PASS
-stty echo
+if [ -t 0 ]; then
+  echo -n "Passphrase: "
+  trap "stty echo" HUP INT QUIT TERM
+  stty -echo
+  read PASS
+  stty echo
 
-echo
+  echo
+else
+  read PASS
+fi
 
 URL=https://$HOST:$PORT/jwt-server/chpass
 
