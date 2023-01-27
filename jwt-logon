@@ -56,7 +56,7 @@ if [ $curl_ret -ne 0 ] || [ -z "$JWT" ] || [ $jwt_ret -eq 0 ]; then
   echo "Failed"
   exit 1
 else
-  echo "Success"
+  echo "Output JWT to "$DOWNLOAD_PATH
   umask 077; echo $JWT > $DOWNLOAD_PATH
   exit 0
 fi
