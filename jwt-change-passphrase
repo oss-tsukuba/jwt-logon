@@ -3,6 +3,8 @@
 CURL=curl
 PORT=443
 
+CMDNAME=$(basename $0)
+
 while getopts s:l:p: OPT
 do
   case $OPT in
