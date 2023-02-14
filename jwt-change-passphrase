@@ -8,16 +8,16 @@ CMDNAME=$(basename $0)
 while getopts s:l:p: OPT
 do
   case $OPT in
-    "s" ) HOST="$OPTARG" ;;
+    "s" ) BASE_URL="$OPTARG" ;;
     "l" ) ACCOUNT="$OPTARG" ;;
     "p" ) PORT="$OPTARG" ;;
-      * ) echo "Usage: $CMDNAME [-s HOST] [-l USER]" 1>&2
+      * ) echo "Usage: $CMDNAME [-s URL] [-l USER]" 1>&2
           exit 1 ;;
   esac
 done
 
-if [ -z "$HOST" -o -z "$ACCOUNT" ]; then
- echo "Usage: $CMDNAME [-s HOST] [-l USER]" 1>&2
+if [ -z "$BASE_URL" -o -z "$ACCOUNT" ]; then
+ echo "Usage: $CMDNAME [-s URL] [-l USER]" 1>&2
  exit 1
 fi
 
@@ -33,7 +33,7 @@ else
   read PASS
 fi
 
-URL=https://$HOST:$PORT/jwt-server/chpass
+URL=$BASE_URL/chpass
 
 COMMAND="$CURL -m 10 -X POST -d user=$ACCOUNT -d pass=$PASS $URL"
 
