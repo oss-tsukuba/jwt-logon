@@ -5,6 +5,14 @@ PORT=443
 
 CMDNAME=$(basename $0)
 
+if [ -n $JWT_SERVER_URL ]; then
+  BASE_URL=$JWT_SERVER_URL
+fi
+
+if [ -n $LOGNAME ]; then
+  ACCOUNT=$LOGNAME
+fi
+
 while getopts s:l:p: OPT
 do
   case $OPT in
