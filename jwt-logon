@@ -5,13 +5,24 @@ PORT=443
 
 CMDNAME=$(basename $0)
 
-if [ -z $JWT_USER ]; then
+if [ -z $JWT_USER_PATH ]; then
   USER_ID=`id -u`
   DOWNLOAD_FOLDER=/tmp/jwt_user_u$USER_ID
-  mkdir -p $DOWNLOAD_FOLDER
   DOWNLOAD_PATH="${DOWNLOAD_FOLDER}/token.jwt"
 else
-  DOWNLOAD_PATH=$JWT_USER
+  DOWNLOAD_PATH=$JWT_USER_PATH
+fi
+umask 077; mkdir -p `dirname $DOWNLOAD_PATH`
+TMP_PATH=`dirname $DOWNLOAD_PATH`/token.tmp
+
+echo $TMP_PATH
+
+if [ -n $JWT_SERVER_URL ]; then
+  BASE_URL=$JWT_SERVER_URL
+fi
+
+if [ -n $LOGNAME ]; then
+  ACCOUNT=$LOGNAME
 fi
 
 while getopts s:l:p: OPT
@@ -56,11 +67,12 @@ jwt_ret=$?
 if [ $curl_ret -ne 0 ] || [ -z "$JWT" ] || [ $jwt_ret -eq 0 ]; then
 #error
   if [ $curl_ret -eq 0 ]; then
-      echo "Authentication Error"
+      echo $ACCOUNT":Authentication Error"
   fi
   exit 1
 else
+  umask 077; echo $JWT > $TMP_PATH
+  mv $TMP_PATH $DOWNLOAD_PATH
   echo "Output JWT to "$DOWNLOAD_PATH
-  umask 077; echo $JWT > $DOWNLOAD_PATH
   exit 0
 fi
