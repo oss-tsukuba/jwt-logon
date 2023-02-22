@@ -15,8 +15,6 @@ fi
 umask 077; mkdir -p `dirname $DOWNLOAD_PATH`
 TMP_PATH=`dirname $DOWNLOAD_PATH`/token.tmp
 
-echo $TMP_PATH
-
 if [ -n $JWT_SERVER_URL ]; then
   BASE_URL=$JWT_SERVER_URL
 fi
