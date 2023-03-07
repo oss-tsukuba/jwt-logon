@@ -62,9 +62,14 @@ curl_ret=$?
 expr "$JWT" : '.*Error.*' > /dev/null
 jwt_ret=$?
 
-if [ $curl_ret -ne 0 ] || [ -z "$JWT" ] || [ $jwt_ret -eq 0 ]; then
+expr "$JWT" : '.*<html>.*' > /dev/null
+jwt_ret2=$?
+
+if [ $curl_ret -ne 0 ] || [ -z "$JWT" ] || [ $jwt_ret -eq 0 ] || [ $jwt_ret2 -eq 0 ]; then
 #error
-  if [ $curl_ret -eq 0 ]; then
+  if [ $jwt_ret2 -eq 0 ]; then
+      echo $ACCOUNT":Invalid Server"
+  elif [ $curl_ret -eq 0 ]; then
       echo $ACCOUNT":Authentication Error"
   fi
   exit 1
