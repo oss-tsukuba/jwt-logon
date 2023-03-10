@@ -53,7 +53,7 @@ fi
 
 URL=$BASE_URL/jwt
 
-COMMAND="$CURL -sS -m 10 -X POST -d user=$ACCOUNT -d pass=$PASS $URL"
+COMMAND="$CURL -f -sS -m 10 -X POST -d user=$ACCOUNT -d pass=$PASS $URL"
 
 JWT=`$COMMAND`
 curl_ret=$?
