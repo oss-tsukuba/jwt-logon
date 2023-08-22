@@ -1,7 +1,6 @@
 #!/bin/sh
 
 CURL=curl
-PORT=443
 
 CMDNAME=$(basename $0)
 
@@ -28,7 +27,6 @@ do
   case $OPT in
     "s" ) BASE_URL="$OPTARG" ;;
     "l" ) ACCOUNT="$OPTARG" ;;
-    "p" ) PORT="$OPTARG" ;;
       * ) echo "Usage: $CMDNAME [-s URL] [-l USER]" 1>&2
           exit 1 ;;
   esac
