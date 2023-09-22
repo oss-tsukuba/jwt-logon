@@ -15,7 +15,7 @@ fi
 while getopts s:l:p: OPT
 do
   case $OPT in
-    "s" ) BASE_URL="$OPTARG" ;;
+    "s" ) BASE_URL=$BASE_URL" ""$OPTARG" ;;
     "l" ) ACCOUNT="$OPTARG" ;;
       * ) echo "Usage: $CMDNAME [-s URL] [-l USER]" 1>&2
           exit 1 ;;
@@ -39,22 +39,38 @@ else
   read PASS
 fi
 
-URL=$BASE_URL/chpass
+set -- $BASE_URL
+for i in `seq 1 $#`
+do
+    u=$(eval echo '$'${i})
+    URL=$u/chpass
 
-COMMAND="$CURL -m 10 -X POST -d user=$ACCOUNT -d pass=$PASS $URL"
+    echo "$u"
 
-PASSPHRASE=`$COMMAND 2>/dev/null`
-curl_ret=$?
-#curl's exit status is 0 at authentication error
+    COMMAND="$CURL -f -sS -m 10 -X POST -d user=$ACCOUNT -d pass=$PASS $URL"
 
-expr "$JWT" : '.*Error.*' > /dev/null
-jwt_ret=$?
+    PASSPHRASE=`$COMMAND`
+    curl_ret=$?
+    #curl's exit status is 0 at authentication error
 
-if  [ $curl_ret -ne 0 ] || [ -z "$PASSPHRASE" ] || [ $jwt_ret -eq 0 ]; then
-#error
-  echo "Failed"
-  exit 1
-else
-  echo $PASSPHRASE
-  exit 0
-fi
+    expr "$PASSPHRASE" : '.*Error.*' > /dev/null
+    jwt_ret=$?
+
+    expr "$PASSPHRASE" : '.*<html>.*' > /dev/null
+    jwt_ret2=$?
+
+    if  [ $curl_ret -ne 0 ] || [ -z "$PASSPHRASE" ] || [ $jwt_ret -eq 0 ] || [ $jwt_ret2 -eq 0 ]; then
+	#error
+	if [ $jwt_ret2 -eq 0 ]; then
+	    echo $ACCOUNT":Invalid Server"
+        elif [ $curl_ret -eq 0 ]; then
+            echo $ACCOUNT":Authentication Error"
+	else
+           continue;
+	fi
+	exit 1
+    else
+	echo $PASSPHRASE
+	exit 0
+    fi
+done
