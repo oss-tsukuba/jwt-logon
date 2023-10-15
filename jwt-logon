@@ -1,8 +1,15 @@
 #!/bin/sh
 
+VERSION=1.0.0
 CURL=curl
 
 CMDNAME=$(basename $0)
+
+usage()
+{
+  echo >&2 "Usage: $CMDNAME [-s URL] [-l USER] [-V]"
+  exit 2
+}
 
 if [ -z $JWT_USER_PATH ]; then
   USER_ID=`id -u`
@@ -22,19 +29,19 @@ if [ -n $LOGNAME ]; then
   ACCOUNT=$LOGNAME
 fi
 
-while getopts s:l:p: OPT
+while getopts s:l:V OPT
 do
   case $OPT in
-    "s" ) BASE_URL="$OPTARG" ;;
-    "l" ) ACCOUNT="$OPTARG" ;;
-      * ) echo "Usage: $CMDNAME [-s URL] [-l USER]" 1>&2
-          exit 1 ;;
+    s) BASE_URL="$OPTARG" ;;
+    l) ACCOUNT="$OPTARG" ;;
+    V) echo $CMDNAME version $VERSION
+       exit 0 ;;
+    *) usage ;;
   esac
 done
 
 if [ -z "$BASE_URL" -o -z "$ACCOUNT" ]; then
- echo "Usage: $CMDNAME [-s URL] [-l USER]" 1>&2
- exit 1
+  usage
 fi
 
 if [ -t 0 ]; then
