@@ -32,7 +32,7 @@ fi
 while getopts s:l:V OPT
 do
   case $OPT in
-    s) BASE_URL="$OPTARG" ;;
+    s) BASE_URL=$BASE_URL" ""$OPTARG" ;;
     l) ACCOUNT="$OPTARG" ;;
     V) echo $CMDNAME version $VERSION
        exit 0 ;;
@@ -56,31 +56,42 @@ else
   read PASS
 fi
 
-URL=$BASE_URL/jwt
+set -- $BASE_URL
+for i in `seq 1 $#`
+do
+    u=$(eval echo '$'${i})
+    URL=$u/jwt
 
-COMMAND="$CURL -f -sS -m 10 -X POST -d user=$ACCOUNT -d pass=$PASS $URL"
+    echo "$u"
 
-JWT=`$COMMAND`
-curl_ret=$?
-#curl's exit status is 0 at authentication error
+    COMMAND="$CURL -f -sS -m 10 -X POST -d user=$ACCOUNT -d pass=$PASS $URL"
 
-expr "$JWT" : '.*Error.*' > /dev/null
-jwt_ret=$?
+    JWT=`$COMMAND`
+    curl_ret=$?
+    #curl's exit status is 0 at authentication error
 
-expr "$JWT" : '.*<html>.*' > /dev/null
-jwt_ret2=$?
+    expr "$JWT" : '.*Error.*' > /dev/null
+    jwt_ret=$?
 
-if [ $curl_ret -ne 0 ] || [ -z "$JWT" ] || [ $jwt_ret -eq 0 ] || [ $jwt_ret2 -eq 0 ]; then
-#error
-  if [ $jwt_ret2 -eq 0 ]; then
-      echo $ACCOUNT":Invalid Server"
-  elif [ $curl_ret -eq 0 ]; then
-      echo $ACCOUNT":Authentication Error"
-  fi
-  exit 1
-else
-  umask 077; echo $JWT > $TMP_PATH
-  mv $TMP_PATH $DOWNLOAD_PATH
-  echo "Output JWT to "$DOWNLOAD_PATH
-  exit 0
-fi
+    expr "$JWT" : '.*<html>.*' > /dev/null
+    jwt_ret2=$?
+
+    if [ $curl_ret -ne 0 ] || [ -z "$JWT" ] || [ $jwt_ret -eq 0 ] || [ $jwt_ret2 -eq 0 ]; then
+	#error
+	if [ $jwt_ret2 -eq 0 ]; then
+	    echo $ACCOUNT":Invalid Server"
+	elif [ $curl_ret -eq 0 ]; then
+	    echo $ACCOUNT":Authentication Error"
+	else
+	    continue;
+	fi
+	exit 1
+    else
+	umask 077; echo $JWT > $TMP_PATH
+	mv $TMP_PATH $DOWNLOAD_PATH
+	echo "Output JWT to "$DOWNLOAD_PATH
+	exit 0
+    fi
+done
+
+
