@@ -22,9 +22,9 @@ The jwt-change-passphrase asks a passphrase to obtain a JWT, which
 is provided by a JWT server.  The jwt-change-passphrase also accepts the
 passphrase by the standard input.
 
-When multiple -s options are specified, the jwt-change-passphrase atemmpts to
+When multiple -s options are specified, the jwt-change-passphrase attempts to
 access a JWT Server in order if the server is not working.
-If th passphrase is incorrect, the program terminates at that point.
+If the passphrase is incorrect, the program terminates at that point.
 Also, the jwt-logon exits if all URLs are not working.
 
 # OPTIONS
