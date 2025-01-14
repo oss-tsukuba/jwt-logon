@@ -43,7 +43,7 @@ set -- $BASE_URL
 for i in `seq 1 $#`
 do
     u=$(eval echo '$'${i})
-    URL=$u/chpass
+    URL=$u'chpass'
 
     echo "$u"
 
