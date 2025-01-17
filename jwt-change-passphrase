@@ -43,7 +43,8 @@ set -- $BASE_URL
 for i in `seq 1 $#`
 do
     u=$(eval echo '$'${i})
-    URL=${u%/}'/chpass'
+    u=$(echo $u | sed 's:/*$::')
+    URL=${u}'/chpass'
 
     echo "$u"
 
