@@ -28,7 +28,7 @@ if [ -z "$BASE_URL" -o -z "$ACCOUNT" ]; then
 fi
 
 if [ -t 0 ]; then
-  echo -n "Passphrase: "
+  printf "Passphrase: "
   trap "stty echo" HUP INT QUIT TERM
   stty -echo
   read PASS

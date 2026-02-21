@@ -12,7 +12,7 @@ install:
 	install -m 0755 jwt-change-passphrase $(DESTDIR)$(BINDIR)/jwt-change-passphrase
 
 jwt-logon.1: jwt-logon.1.md
-	pandoc -s -t man $< -o $@
+	-pandoc -s -t man $< -o $@
 
 jwt-change-passphrase.1: jwt-change-passphrase.1.md
-	pandoc -s -t man $< -o $@
+	-pandoc -s -t man $< -o $@
